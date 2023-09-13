@@ -1,5 +1,6 @@
 import tkinter as tk
 import winsound
+import random
 
 # Configurações da janela
 janela = tk.Tk()
@@ -12,12 +13,13 @@ for i in range(16):
     janela.grid_columnconfigure(i, weight=1)
     janela.grid_rowconfigure(i, weight=1)
 
-# Inicialização das coordenadas do sorriso
+# Inicialização das coordenadas do sorriso e do coração
 x, y = 0, 0
+coracao_x, coracao_y = random.randint(0, 15), random.randint(0, 15)
 
 # Função para mover o sorriso
 def mover_sorriso(event):
-    global x, y
+    global x, y, coracao_x, coracao_y
 
     if event.keysym == "Up" and y > 0:
         y -= 1
@@ -30,17 +32,24 @@ def mover_sorriso(event):
     else:
         winsound.Beep(500, 100)  # Emitir som de "beep" quando o usuário tenta sair
 
+    if x == coracao_x and y == coracao_y:
+        coracao_x, coracao_y = random.randint(0, 15), random.randint(0, 15)
+        winsound.Beep(1000, 100)  # Emitir som de "beep" quando pega o coração
+
     desenhar_sorriso()
 
-# Função para desenhar o sorriso
+# Função para desenhar o sorriso e o coração
 def desenhar_sorriso():
     for i in range(16):
         for j in range(16):
             lbl = tk.Label(janela, text=" ", font=("Courier", 12), bg="lightyellow", fg="yellow")
             lbl.grid(row=i, column=j, sticky="nsew")
 
-    lbl_sorriso = tk.Label(janela, text="😃", font=("Courier", 12) , bg="lightyellow", fg="yellow")
+    lbl_sorriso = tk.Label(janela, text="😃", font=("Courier", 12), bg="lightyellow", fg="yellow")
     lbl_sorriso.grid(row=y, column=x, sticky="nsew")
+
+    lbl_coracao = tk.Label(janela, text="❤️", font=("Courier", 12), bg="lightyellow", fg="red")
+    lbl_coracao.grid(row=coracao_y, column=coracao_x, sticky="nsew")
 
 # Registrar a função para eventos de teclado
 janela.bind("<Up>", mover_sorriso)
